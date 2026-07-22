@@ -51,22 +51,22 @@ Helps marketing teams generate consistent content while maintaining an approval 
 
 ### Workflow
 
-![Workflow][screenshots/workflow.png]
+![Workflow](screenshots/workflow.png)
 ### Form
 
-![Form][screenshots/form.png]
+![Form(screenshots/form.png)
 
 ### Airtable
 
-![Airtable][screenshots/airtable.png]
+![Airtable](screenshots/airtable.png)
 
 ### Slack
 
-![Slack][screenshots/slack.png]
+![Slack](screenshots/slack.png)
 
 ### Gmail
 
-![Slack][screenshots/gmail.png]
+![Slack](screenshots/gmail.png)
 
 
 ---
