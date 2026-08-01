@@ -1,86 +1,172 @@
-# 🤖 AI Social Media Content Generator
+# 🚀 AI Social Media Content Generator
 
-An AI-powered marketing automation workflow built using **n8n**, **Google Gemini**, **Airtable**, **Gmail**, and **Slack**.
+A production-ready AI-powered social media automation workflow built with **n8n**, **Google Gemini**, **Airtable**, and **Webhooks**.
 
-The workflow generates high-quality social media content, stores it for approval, and notifies the marketing team.
-
----
-
-## Features
-
-- AI-generated social media posts
-- Platform-specific content
-- AI-generated headlines
-- AI-generated hashtags
-- AI-generated call-to-action
-- Airtable approval workflow
-- Email notifications
-- Slack notifications
+The workflow generates high-quality content tailored for different social media platforms, stores generated posts in Airtable, and logs every workflow execution.
 
 ---
 
-## Tech Stack
+## ✨ Features
+
+- API Key Authentication
+- Webhook API
+- Request Validation
+- AI-powered content generation
+- Platform-aware content generation
+- Brand Voice support
+- Multiple Content Types
+- Quality Score
+- Automatic Approval
+- Airtable Integration
+- Workflow Logging
+- JSON API Response
+
+---
+
+## 🛠 Tech Stack
 
 - n8n
 - Google Gemini
 - Airtable
-- Gmail
-- Slack
+- Webhooks
+- JavaScript
 
 ---
 
-## Workflow
+## 📊 Workflow
 
-Marketing Form
-→ Gemini generates content
-→ Parse JSON
-→ Store in Airtable
-→ Status = Pending Approval
-→ Email Marketing Manager
-→ Slack Notification
-
----
-
-## Business Value
-
-Helps marketing teams generate consistent content while maintaining an approval process before publishing.
-
----
-
-## Screenshots
-
-### Workflow
-
-![Workflow](screenshots/workflow.png)
-### Form
-
-![Form(screenshots/form.png)
-
-### Airtable
-
-![Airtable](screenshots/airtable.png)
-
-### Slack
-
-![Slack](screenshots/slack.png)
-
-### Gmail
-
-![Slack](screenshots/gmail.png)
-
+```text
+Webhook
+    │
+Authenticate Request
+    │
+Validate Input
+    │
+Normalize Request
+    │
+Generate Request ID
+    │
+Save Content Request
+    │
+Generate AI Content
+    │
+Parse AI JSON
+    │
+Save Generated Content
+    │
+Update Request Status
+    │
+Log Success
+    │
+Respond to Webhook
+```
 
 ---
 
-## Future Improvements
+## 📥 Sample Request
 
-- LinkedIn publishing
-- Facebook publishing
-- Instagram scheduling
-- Content calendar
-- Multi-level approval workflow
+```json
+{
+  "apiKey": "portfolio-demo-key",
+  "topic": "How AI Automation Saves Small Businesses Time",
+  "platform": "LinkedIn",
+  "contentType": "Educational",
+  "tone": "Professional",
+  "audience": "Small Business Owners",
+  "brandVoice": "Professional, educational, concise."
+}
+```
 
 ---
 
-## Author
+## 📤 Sample Response
 
-Ayman Amjad
+```json
+{
+  "success": true,
+  "requestId": "REQ-1785609560445",
+  "platform": "LinkedIn",
+  "qualityScore": 96,
+  "approval": "Approved"
+}
+```
+
+---
+
+## 📂 Airtable Structure
+
+### Content Requests
+
+- Request ID
+- Topic
+- Platform
+- Content Type
+- Tone
+- Audience
+- Brand Voice
+- Status
+- Created At
+
+### Generated Content
+
+- Request ID
+- Title
+- Platform
+- LinkedIn Post
+- X Post
+- Instagram Caption
+- Facebook Post
+- Hashtags
+- Keywords
+- Call To Action
+- Quality Score
+- Status
+- Generated At
+
+### Workflow Executions
+
+- Execution ID
+- Workflow
+- Status
+- Message
+- Timestamp
+
+---
+
+## 📸 Screenshots
+
+
+### Workflow Overview
+![Workflow](screenshots//workflow.png)
+
+### Airtable Records
+![Airtable](screenshots//posts.png)
+
+![Airtable](screenshots//posts2.png)
+
+![Airtable](screenshots//executions.png)
+
+### AI Response
+![Gemini](screenshots//ai-response.png)
+
+### Webhook Response
+![Bruno](screenshots//bruno.png)
+
+
+---
+
+## 🎥 Demo
+
+A short 60–90 second demo should show:
+
+1. Send a webhook request.
+2. AI generates content.
+3. Airtable stores the request and generated content.
+4. Workflow execution log updates.
+5. API returns a success response.
+
+---
+
+## 📄 License
+
+MIT
