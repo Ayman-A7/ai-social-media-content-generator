@@ -1,0 +1,1131 @@
+{
+  "name": "AI Social Media Content Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "=POST",
+        "path": "content-data",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -224,
+        352
+      ],
+      "id": "62a1db83-ed44-40d5-b665-e1fa7f897174",
+      "name": "01 - Receive Content Request",
+      "webhookId": "aa3c2a57-f077-465b-9069-93e28689b627"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "505e5669-4d8d-445d-b5e1-3fb5985db887",
+              "leftValue": "={{ $json.body.apiKey }}",
+              "rightValue": "portfolio-demo-key",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        352
+      ],
+      "id": "be7070cc-d4a7-4cd3-af84-5f184fdce7ef",
+      "name": "02 - Authenticate Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3f5f4bff-9531-4df2-89a1-974aa073a3c4",
+              "leftValue": "={{ $json.body.topic }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "d6b749ba-c703-49f0-9c6c-749f7b91714a",
+              "leftValue": "={{ $json.body.platform }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "62131441-b590-4ade-a3ed-0abc37eb527b",
+              "leftValue": "={{ $json.body.tone }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "c6edb0eb-e42a-49ad-a771-20be0e0eedc8",
+              "leftValue": "={{ $json.body.audience }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "af50fea2-c063-4f0c-b7b1-b702e20fd624",
+              "leftValue": "={{ $json.body.brandVoice }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        256
+      ],
+      "id": "03a679ef-0c1c-445a-b333-e048f024cb86",
+      "name": "03 - Validate Input"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": false,\n  \"status\": 401,\n  \"message\": \"Invalid API Key\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        224,
+        448
+      ],
+      "id": "81b14ddb-12c1-453e-828c-5c04458ab34b",
+      "name": "Unauthorized Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": false,\n  \"status\": 400,\n  \"message\": \"Required fields are missing.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        448,
+        352
+      ],
+      "id": "fb7029bd-d3b4-4c45-be91-7fbf3b6bc397",
+      "name": "Invalid Inputs"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ed03ffb0-794d-4acc-887f-7ec10a3580e0",
+              "name": "topic",
+              "value": "={{ $json.body.topic.trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "8ca51bcf-e942-4dfb-b5a6-8a9d44ef9b2b",
+              "name": "platform",
+              "value": "={{ $json.body.platform.trim()}}",
+              "type": "string"
+            },
+            {
+              "id": "563940b1-081a-4d7b-ae00-93a925c54326",
+              "name": "tone",
+              "value": "={{ $json.body.tone.trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "4035431c-f6b5-4cc2-b2d3-7146b0e66a6c",
+              "name": "audience",
+              "value": "={{ $json.body.audience.trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "d46957be-67ce-4ac4-8463-3ff9f2636dd2",
+              "name": "recievedAt",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "aba3f02d-1645-42c8-915a-8f53bc1a7d6d",
+              "name": "brandVoice",
+              "value": "={{ $json.body.brandVoice }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        160
+      ],
+      "id": "d0af93a5-f7e4-4c2e-9682-c541cda68695",
+      "name": "04 - Normalize Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1dc33ea0-9f68-4cc1-b304-4dc134d2c21e",
+              "name": "requestId",
+              "value": "={{ 'REQ-' + Date.now() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        160
+      ],
+      "id": "6373f3b4-4925-452c-9f8c-db81d583c3f6",
+      "name": "05 - Generate Request ID"
+    },
+    {
+      "parameters": {
+        "jsCode": "const parsed = JSON.parse($json.text);\n\nreturn [\n  {\n    json: parsed\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1696,
+        -32
+      ],
+      "id": "c9f6f426-2195-4cf2-8bb3-8f0cf0441b5c",
+      "name": "07 - Parse AI JSON"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appHbi72GXn2Vfwxo",
+          "mode": "list",
+          "cachedResultName": "Social Media Content",
+          "cachedResultUrl": "https://airtable.com/appHbi72GXn2Vfwxo"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblW5rj1ixeMoEk5v",
+          "mode": "list",
+          "cachedResultName": "Posts",
+          "cachedResultUrl": "https://airtable.com/appHbi72GXn2Vfwxo/tblW5rj1ixeMoEk5v"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Hashtags": "={{ $json.hashtags.join(', ') }}",
+            "Status": "={{ $json.approval }}",
+            "Title": "={{ $json.title }}",
+            "Keywords": "={{ $json.keywords.join(', ') }}",
+            "Quality Score": "={{ $json.qualityScore }}",
+            "Request ID": "={{ $('05 - Generate Request ID').item.json.requestId }}",
+            "Call to Action": "={{ $json.callToAction }}",
+            "LinkedIn Post": "={{ $('04 - Normalize Request').item.json.platform === 'LinkedIn' ? $json.content : '' }}{{ $('04 - Normalize Request').item.json.platform === 'LinkedIn' ? $json.content : '' }}",
+            "X Post": "={{ $('04 - Normalize Request').item.json.platform === 'X' ? $json.content : '' }}",
+            "Facebook Post": "={{ $('04 - Normalize Request').item.json.platform === 'Facebook' ? $json.content : '' }}",
+            "Platform": "={{ $('04 - Normalize Request').item.json.platform }}",
+            "Instagram Caption": "={{ $('04 - Normalize Request').item.json.platform === 'Instagram' ? $json.content : '' }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Request ID",
+              "displayName": "Request ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Platform",
+              "displayName": "Platform",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "X Post",
+              "displayName": "X Post",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "LinkedIn Post",
+              "displayName": "LinkedIn Post",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Instagram Caption",
+              "displayName": "Instagram Caption",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Facebook Post",
+              "displayName": "Facebook Post",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Hashtags",
+              "displayName": "Hashtags",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Call to Action",
+              "displayName": "Call to Action",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Quality Score",
+              "displayName": "Quality Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1920,
+        -32
+      ],
+      "id": "f7116039-f5b4-4aa6-a1d3-9d42dceb1960",
+      "name": "08 - Save Generated Content",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "HTKgdkMecNpgMRig",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('04 - Normalize Request').item.json.platform }}",
+                    "rightValue": "LinkedIn",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "75192f1f-0049-4c87-af5c-dcad4a980710"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "25a27398-dcca-4bf2-a85a-dbcb984b77c7",
+                    "leftValue": "={{ $('04 - Normalize Request').item.json.platform }}",
+                    "rightValue": "X",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f91738d7-a005-4481-9b8d-f9d88436b700",
+                    "leftValue": "={{ $('04 - Normalize Request').item.json.platform }}",
+                    "rightValue": "Instagram",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "aa1ec409-dcfc-4525-811c-d54b176d26f1",
+                    "leftValue": "={{ $('04 - Normalize Request').item.json.platform }}",
+                    "rightValue": "Facebook",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "78a69c17-878f-4241-b579-3eafe3fb714d",
+                    "leftValue": "={{ $('04 - Normalize Request').item.json.platform }}",
+                    "rightValue": "All",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        112
+      ],
+      "id": "32ec520d-4faf-4f67-a0af-d27af7c5e7ef",
+      "name": "06 - Route Platform"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1424,
+        192
+      ],
+      "id": "9ce4efa8-e1f4-4f7b-8494-103f821edeb4",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "WrbY98auAVWVuuZ6",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fde0e91-908f-45f0-a1d5-08638922210d",
+              "name": "instructions",
+              "value": "Generate a professional LinkedIn post.  Length: 150–250 words.  Start with a strong hook.  Provide educational value.  Use short paragraphs.  End with a question.  Maximum 6 emojis.",
+              "type": "string"
+            },
+            {
+              "id": "6e5b10a4-b01a-4df1-8259-d0bc40f4d341",
+              "name": "platform",
+              "value": "={{ $('04 - Normalize Request').item.json.platform }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        -224
+      ],
+      "id": "862a81be-f49f-4e8f-8b15-7d984a5a3b15",
+      "name": "06A - LinkedIn Instructions"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fde0e91-908f-45f0-a1d5-08638922210d",
+              "name": "instructions",
+              "value": "Generate an engaging Instagram caption.  Friendly.  Storytelling style.  Use emojis.  End with a CTA.  Generate 10 hashtags.",
+              "type": "string"
+            },
+            {
+              "id": "b975b28b-3daa-4049-80f1-85fa30b960c2",
+              "name": "platform",
+              "value": "={{ $('04 - Normalize Request').item.json.platform }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        -32
+      ],
+      "id": "33cd759f-2ca1-4c01-be6c-8b0af9cb5586",
+      "name": "06B - Instagram Instructions"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fde0e91-908f-45f0-a1d5-08638922210d",
+              "name": "instructions",
+              "value": "Generate one X post.  Maximum 280 characters.  Strong hook.  Maximum 3 hashtags.  No unnecessary emojis.",
+              "type": "string"
+            },
+            {
+              "id": "cd1dc5ea-6fe8-408e-a581-cbca00181e39",
+              "name": "platform",
+              "value": "={{ $('04 - Normalize Request').item.json.platform }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        160
+      ],
+      "id": "f234f4ce-6a63-44c9-b868-5caeb49af98f",
+      "name": "06C - X Instructions"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fde0e91-908f-45f0-a1d5-08638922210d",
+              "name": "instructions",
+              "value": "Generate a conversational Facebook post.  Educational.  Short paragraphs.  Encourage discussion.  End with a CTA.",
+              "type": "string"
+            },
+            {
+              "id": "f84347ba-3287-497d-a610-398099549840",
+              "name": "platform",
+              "value": "={{ $('04 - Normalize Request').item.json.platform }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        352
+      ],
+      "id": "7c3e43aa-1128-426e-bfe1-c50a7bc5c32c",
+      "name": "06D - Facebook Instructions"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fde0e91-908f-45f0-a1d5-08638922210d",
+              "name": "instructions",
+              "value": "Generate optimized content for LinkedIn, X, Instagram, and Facebook.  Return separate content for each platform.",
+              "type": "string"
+            },
+            {
+              "id": "22b3bf34-86f6-4067-8ade-f3fd96116c07",
+              "name": "paltform",
+              "value": "={{ $('04 - Normalize Request').item.json.platform }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        544
+      ],
+      "id": "f5e35732-2099-4fd5-a027-db3435c5d255",
+      "name": "06E - Multi Platform Instructions"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior social media strategist and expert copywriter.\n\nYour task is to create high-quality social media content.\n\nContent Details\n\nTopic:\n{{ $('04 - Normalize Request').item.json.topic }}\n\nTarget Audience:\n{{ $('04 - Normalize Request').item.json.audience }}\n\nTone:\n{{ $('04 - Normalize Request').item.json.tone }}\n\nPlatform:\n{{ $('04 - Normalize Request').item.json.platform }}\n\nPlatform Instructions:\n{{ $json.instructions }}\n\nBrand Voice:\n{{ $('04 - Normalize Request').item.json.brandVoice }}\n\n\nRequirements:\n\n- Follow the platform instructions exactly.\n- Write naturally like a human copywriter.\n- Create engaging and original content.\n- Avoid sounding robotic.\n- Use a strong opening hook.\n- End with a compelling call-to-action.\n- Generate relevant hashtags.\n- Generate SEO keywords.\n- Give the content a quality score from 0-100.\n- Decide whether the content should be automatically approved.\n\nApproval Rules:\n\n90-100 = Approved\n\n80-89 = Approved\n\nBelow 80 = Needs Review\n\nReturn ONLY valid JSON.\n\nIf generating content for a SINGLE platform:\n\n{\n  \"title\": \"\",\n  \"content\": \"\",\n  \"hashtags\": [],\n  \"keywords\": [],\n  \"callToAction\": \"\",\n  \"qualityScore\": 95,\n  \"brandVoice\": \"Professional, educational, concise. Avoid jargon. End with a question.\"\n  \"approval\": \"Approved\",\n  \"reason\": \"\"\n}\n\nIf generating content for ALL platforms:\n\n{\n  \"title\": \"\",\n  \"linkedin\": \"\",\n  \"twitter\": \"\",\n  \"instagram\": \"\",\n  \"facebook\": \"\",\n  \"hashtags\": [],\n  \"keywords\": [],\n  \"callToAction\": \"\",\n  \"qualityScore\": 95,\n  \"approval\": \"Approved\",\n  \"reason\": \"\"\n}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1344,
+        -32
+      ],
+      "id": "a2714da6-d978-41f4-9e73-aceb489ab845",
+      "name": "07 - AI Content Generator",
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appHbi72GXn2Vfwxo",
+          "mode": "list",
+          "cachedResultName": "Social Media Content",
+          "cachedResultUrl": "https://airtable.com/appHbi72GXn2Vfwxo"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbllte8pjGYJCkXAm",
+          "mode": "list",
+          "cachedResultName": "Execution Workflow",
+          "cachedResultUrl": "https://airtable.com/appHbi72GXn2Vfwxo/tbllte8pjGYJCkXAm"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Execution ID": "={{ 'EXEC-' + Date.now() }}",
+            "Workflow": "AI Social Media Content Generator",
+            "Priority": "Normal",
+            "Status": "Success",
+            "Message": "AI content generated successfully."
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Execution ID",
+              "displayName": "Execution ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        2144,
+        -32
+      ],
+      "id": "713aecd5-349b-4258-9f99-8098865354f4",
+      "name": "09 - Success Log",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "HTKgdkMecNpgMRig",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"requestId\": \"{{ $('05 - Generate Request ID').item.json.requestId }}\",\n  \"platform\": \"{{ $('04 - Normalize Request').item.json.platform }}\",\n  \"topic\": \"{{ $('04 - Normalize Request').item.json.topic }}\",\n  \"qualityScore\": {{ $('07 - Parse AI JSON').item.json.qualityScore }},\n  \"approval\": \"{{ $('07 - Parse AI JSON').item.json.approval }}\",\n  \"generatedAt\": \"{{ $now}}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2368,
+        -32
+      ],
+      "id": "eab38ba8-1976-4aaa-9efc-a5d358d935af",
+      "name": "10 - Return Response"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "01 - Receive Content Request": {
+      "main": [
+        [
+          {
+            "node": "02 - Authenticate Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "02 - Authenticate Request": {
+      "main": [
+        [
+          {
+            "node": "03 - Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unauthorized Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "03 - Validate Input": {
+      "main": [
+        [
+          {
+            "node": "04 - Normalize Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04 - Normalize Request": {
+      "main": [
+        [
+          {
+            "node": "05 - Generate Request ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "05 - Generate Request ID": {
+      "main": [
+        [
+          {
+            "node": "06 - Route Platform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "07 - Parse AI JSON": {
+      "main": [
+        [
+          {
+            "node": "08 - Save Generated Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "08 - Save Generated Content": {
+      "main": [
+        [
+          {
+            "node": "09 - Success Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06 - Route Platform": {
+      "main": [
+        [
+          {
+            "node": "06A - LinkedIn Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "06B - Instagram Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "06D - Facebook Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "06E - Multi Platform Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "06C - X Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "07 - AI Content Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06A - LinkedIn Instructions": {
+      "main": [
+        [
+          {
+            "node": "07 - AI Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06B - Instagram Instructions": {
+      "main": [
+        [
+          {
+            "node": "07 - AI Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06C - X Instructions": {
+      "main": [
+        [
+          {
+            "node": "07 - AI Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06D - Facebook Instructions": {
+      "main": [
+        [
+          {
+            "node": "07 - AI Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06E - Multi Platform Instructions": {
+      "main": [
+        [
+          {
+            "node": "07 - AI Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "07 - AI Content Generator": {
+      "main": [
+        [
+          {
+            "node": "07 - Parse AI JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "09 - Success Log": {
+      "main": [
+        [
+          {
+            "node": "10 - Return Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1b0b28fb-7962-4071-b928-03721c05e1b8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4749ef1dff9dab97533d296fc60571d1f46847c4cabe69d94e1cae900f679a95"
+  },
+  "nodeGroups": [],
+  "id": "tsXDA86LLzXILBAT",
+  "tags": []
+}
